@@ -1,0 +1,47 @@
+{
+  "name": "ecopass_admin",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/react-highlight-words": "^0.16.1",
+    "antd": "^3.26.17",
+    "axios": "^0.19.2",
+    "moment": "^2.26.0",
+    "react": "^16.13.1",
+    "react-data-export": "^0.5.0",
+    "react-datepicker": "^2.16.0",
+    "react-dom": "^16.13.1",
+    "react-export-excel": "^0.5.3",
+    "react-number-format": "^4.4.1",
+    "react-number-format-clari": "^1.1.2-alpha.5",
+    "react-phone-input-2": "^2.13.5",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.1",
+    "reactstrap": "^6.5.0",
+    "sweetalert2": "^7.33.1",
+    "xlsx": "^0.15.6",
+    "xlsx-style": "^0.8.13"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

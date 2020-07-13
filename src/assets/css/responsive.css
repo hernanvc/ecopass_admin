@@ -1,0 +1,74 @@
+@media(max-width: 767px){
+    .ecoppas-aviso img{
+        width: 160px;
+    }
+    .ecoppas-aviso{
+        padding: 0px
+    }
+    .ecoppas-aviso p, .ecoppas-aviso b{
+        width: 80%;
+        padding-left: 20px
+    }
+    .nav-top .bg-light{
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        left: 0px;
+        width: 100%;
+        }
+        .ant-menu{
+        position: fixed;
+        }
+        .navbar .ant-btn-primary{
+        width: 50px;
+        float: right;
+        height: 40px;
+        }
+        .navbar h6{
+        display: none
+        }
+        .toggle-mobile{
+        display: block;
+    }
+    .nav-sider .ant-menu.ant-menu-inline-collapsed{
+        width: 0%;
+    }
+    .nav-sider .ant-menu{
+        width: 100%;
+        position: fixed;
+        height: 100%;
+        z-index: 999;
+    }
+    .nav-top .bg-light{
+        z-index: 1000;
+    }
+    .layout-admin{
+        padding-left: 0px;
+        width: 100%;;
+    }
+    .admin-container{
+      padding: 100px 20px;
+      margin: 0px;
+    }
+}
+  @media(max-width: 600px){
+    .login-layout{
+      padding: 60px 0px;
+      display: flex;
+      justify-content: center;
+      align-items: center; min-height: 100vh
+    }
+    .login-layout img{
+      width: 250px
+    }
+    .login-layout h2{
+      font-size: 22px;
+    }
+  }
+  @media(max-width:450px){
+    .logo-nav{
+      width: 50%;
+    }
+    
+    
+  }
