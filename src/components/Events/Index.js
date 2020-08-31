@@ -21,7 +21,8 @@ class CreatedEvents extends Component {
             loader: true,
             events:[], 
             all:[],
-            eventId: 0
+            eventId: 0,
+            isCorporate:false
         };
     }
 
@@ -29,6 +30,7 @@ class CreatedEvents extends Component {
         
         let fetch = await requestHttp.requestGet('event/info')
         if (fetch) {
+
             await this.setState({
                 events: fetch.data.reverse(),
                 loader: false,
@@ -137,7 +139,7 @@ class CreatedEvents extends Component {
                         events: ev
                     })
                     Swal.fire(
-                        (!this.state.events[e].event.delete ? 'Aliminar Cancelado' : 'Evento eliminado'),
+                        (!this.state.events[e].event.delete ? 'Eliminar Cancelado' : 'Evento eliminado'),
                         'El evento ' + this.state.events[e].event.name + (!this.state.events[e].event.delete ? ' ha sido marcado como activo' : ' ha sido eliminado'),
                         'success',
                     )
@@ -154,6 +156,66 @@ class CreatedEvents extends Component {
                 )
             }
         })
+    }
+
+    async isCorporate(e){
+
+        let id = this.state.events[e].event.id;
+        Swal.fire({
+            title: !this.state.events[e].event.is_corporate ? "Activar corporativo" : "Desactivar corporativo",
+            html: '<p>' + (this.state.events[e].event.is_corporate ? "¿Estás seguro que deseas desactivar modo corporativo?" : "¿Estás seguro que deseas activar el modo corporativo?") + '</p>' + '<h4 class="swal2-title">' + this.state.events[e].event.name + '</h4>',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: !this.state.events[e].event.is_corporate ?  "Activar modo corporativo" : "Si, desactivar modo corporativo",
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.value) {
+                let ev = this.state.events;
+               
+                requestHttp.requestGet('event/' + id).then(data => {
+                    
+                        ev[e].event.is_corporate = !ev[e].event.is_corporate
+                    this.setState({
+                        loader: false,
+                        events: ev
+                    });
+
+                    Swal.fire(
+                        (!this.state.events[e].event.is_corporate ? 'Modo corporativo desactivado' : 'Evento en modo corporativo'),
+                        'El evento ' + this.state.events[e].event.name + (!this.state.events[e].event.is_corporate ? ' ha sido marcado como desactivado' : ' ha sido activado'),
+                        'success',
+                    )
+                    let estado = (ev[e].event.is_corporate) ? true : false
+                    requestHttp.update(`event/iscorporate?id=${id}&status=${estado}`)
+                },(error => {
+                    this.setState({
+                        loader: false,
+                    })
+                    Swal.fire(
+                        'Error',
+                        'Ha ocurrido un error, intentar más tarde.',
+                        'error'
+                    )
+                })
+                )
+            }
+        })
+       
+       /* console.log("Estado variable: ",data.is_corporate);
+        const evento = await requestHttp.requestGet(`event/${data.id}`);
+        
+        this.setState({
+            isCorporate:evento.data.is_corporate
+        })
+
+        console.log("estado: ",this.state.isCorporate);
+
+        let estado = (this.state.isCorporate==true) ? false : true;
+
+        
+        requestHttp.update(`event/iscorporate?id=${data.id}&status=${estado}`);
+        window.location.reload(true);
+        */
     }
 
     /**
@@ -210,7 +272,7 @@ class CreatedEvents extends Component {
                     </Col>
                     <Col xl="12">
                            <div className="table-responsive">
-                                <Table dataSource={this.state.events}>
+                                <Table dataSource={this.state.events} key={this.state.eventId}>
                                     <Column title="Nombre evento" dataIndex="name" key="name"
                                         render={(text, record, index) => (
                                             <span>
@@ -262,6 +324,7 @@ class CreatedEvents extends Component {
                                             <span>
                                                 <button className="transparent-btn" onClick={(e) => this.updateEvent(this.state.events.indexOf(record))}> <span>{record.event.is_active ? "Desactivar" : "Activar"} </span></button>
                                                 <button className="transparent-btn" onClick={(e) => this.outstandEvent(this.state.events.indexOf(record))}> <span>{!record.event.is_outstanding ? "Destacar" : "No Destacar"}</span> </button>
+                                                <button className="transparent-btn" onClick={(e) => this.isCorporate(this.state.events.indexOf(record))}><span>{!record.event.is_corporate ? "Corporativo" : "No Corporativo"}</span></button>
                                                 <Link to={{ pathname: "/admin/evento=" + record.event.id + "/tickets" }} className="second-btn" > <span>Tickets del evento</span></Link>
                                                 <Link to={{ pathname: "/admin/evento=" + record.event.id + "/orden" }} className="second-btn" > <span>Ordenes de pago</span></Link>
                                                 <Link to={{ pathname: "/admin/evento=" + record.event.id + "/pagos" }} className="second-btn" > <span>Tickets Pagados</span></Link>

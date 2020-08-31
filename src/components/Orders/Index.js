@@ -31,7 +31,7 @@ function customTicketExpandIcon(props) {
 }
 
 function customTalkExpandIcon(props) {
-    console.log(props)
+
 
     let text;
     if (props.expanded) {
@@ -76,6 +76,7 @@ class Orders extends Component {
             sendTicketModalVisible: false,
             sendingTicketPay: false,
             sendingOrderPay: false,
+            sendingEvent:false,
 
             /* buscador */
             searchWord: ""
@@ -171,7 +172,8 @@ class Orders extends Component {
     }
 
 
-    showTickets(record, ColumnIndex) {
+    showTickets(record, ColumnIndex, event) {
+        //console.log("record: ",event)
         return <div className="table-responsive">
             <Table 
             dataSource={record}
@@ -248,20 +250,27 @@ class Orders extends Component {
             title="Acciones"
             key="action"
             render={(text, record, index) => (
+               
                 <span>
+                    <>
+
+               </>
                     <button className="transparent-btn"
-                            onClick={(e) => this.showSendTicketModal(record.ticketPay, record.orderPay)}
-                            disabled={record.orderPay.pay_state !== 'APPROVED' || record.ticketPay.is_subscribed || record.ticketPay_status !== 'APROBADO'}>
+                            onClick={(e) => this.showSendTicketModal(record.ticketPay, record.orderPay, event)}
+                            //disabled={record.orderPay.pay_state !== 'APPROVED' || record.ticketPay_status !== 'APROBADO'}
+                            >
                         Enviar Link
                     </button>
                     <button className="transparent-btn"
                             onClick={(e) => this.showEditTicketPayModal(record.ticketPay, ColumnIndex, index)}
-                            disabled={record.orderPay.pay_state !== 'APPROVED' || !record.ticketPay.is_subscribed || record.ticketPay_status !== 'APROBADO'}>
+                            //disabled={record.orderPay.pay_state !== 'APPROVED' || record.ticketPay_status !== 'APROBADO'}
+                            >
                         Editar
                     </button>
                     <button className="transparent-btn"
                             onClick={(e) => this.cancelTicketPay(record.ticketPay, ColumnIndex, index)}
-                            disabled={record.ticketPay_status !== 'APROBADO' || record.orderPay.pay_state !== 'APPROVED'}>
+                            //disabled={record.ticketPay_status !== 'APROBADO' || record.orderPay.pay_state !== 'APPROVED'}
+                            >
                         Cancelar
                     </button>
                 </span>
@@ -344,11 +353,13 @@ class Orders extends Component {
         })
     }
 
-    async showSendTicketModal(ticketPay, orderPay) {
+    async showSendTicketModal(ticketPay, orderPay, event) {
+        
         await this.setState({
             sendTicketModalVisible: true,
             sendingTicketPay: ticketPay,
-            sendingOrderPay: orderPay
+            sendingOrderPay: orderPay,
+            sendingEvent: event
         })
     }
 
@@ -512,6 +523,8 @@ class Orders extends Component {
     }
 
     render() {
+        //console.log("tickets: ",this.state.tickets);
+        
         return (
             <section className="bg-white">
                 <Col span={'24'}>
@@ -564,8 +577,9 @@ class Orders extends Component {
                                 dataSource={this.state.tickets}
                                 style={{marginTop: "10px"}}
                                 expandedRowRender={(record, index) =>
+                                    
                                     <div>
-                                        {this.showTickets(record.ticketAndTicketPayList, this.state.tickets.indexOf(record))}
+                                        {this.showTickets(record.ticketAndTicketPayList, this.state.tickets.indexOf(record), record.event)}
                                     </div>
                                 }
                                 expandIcon={customTicketExpandIcon}>
@@ -574,6 +588,8 @@ class Orders extends Component {
                                     dataIndex="event"
                                     key="event"
                                     render={(text, record, index) => (
+                                        
+                                
                                         <small>
                                             {record.event.name}
                                         </small>
@@ -641,10 +657,12 @@ class Orders extends Component {
                             onHideFail={() => this.hideEditTicketPayModalFail()}
                         >
                         </EditTicketPayModal>
+
                         <SendTicketModal
                             visibility={this.state.sendTicketModalVisible}
                             ticketPay={this.state.sendingTicketPay}
                             orderPay={this.state.sendingOrderPay}
+                            event={this.state.sendingEvent}
                             onHide={() => this.hideSendTicketModal()}
                         >
                         </SendTicketModal>

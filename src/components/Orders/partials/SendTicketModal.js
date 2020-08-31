@@ -12,16 +12,19 @@ class sendTicketModal extends Component {
             visible: false,
             orderPay: false,
             ticketPay: false,
+            event: false,
             email: "",
             error: ""
         }
     }
 
     async UNSAFE_componentWillReceiveProps(next) {
+        //console.log("NEXT:_ ",next)
         await this.setState({
             visible: next.visibility,
             orderPay: next.orderPay,
             ticketPay: next.ticketPay,
+            event: next.event,
             email: next.orderPay.email
         })
 
@@ -52,9 +55,18 @@ class sendTicketModal extends Component {
     };
 
     async sendTicket() {
+        //console.log("This state: ",this.state.ticketPay);
+        //console.log("Event: ",this.state.event)
         let params = {
-            "id": this.state.ticketPay.id,
-            "email": this.state.email,
+            
+            ticketPay : {
+                "id": this.state.ticketPay.id,
+                "email": this.state.email,
+                "dni":this.state.ticketPay.dni
+            },
+            orderPay: this.state.orderPay,
+            event: this.state.event
+            
         };
         let sendEmail = await requestHttp.requestPostToken('ticketPay/resend_ticket', params);
 
@@ -91,6 +103,8 @@ class sendTicketModal extends Component {
     }
 
     async handleChange(e) {
+        //console.log("TARGET: ",e.target.name);
+        //console.log("TARGETVALUE: : ",e.target.value);
         await this.setState({
             [e.target.name]: e.target.value
         });
@@ -98,6 +112,7 @@ class sendTicketModal extends Component {
 
 
     render() {
+        //console.log("ESTADO MODAL: ",this.state);
         return (
             <div>
                 <Modal
@@ -120,8 +135,9 @@ class sendTicketModal extends Component {
 
                         <FormGroup>
                             <Input type="email" name="email" onChange={(e) => this.handleChange(e)}
-                                   value={this.state.email}
-                                   required/>
+                                   value={(this.state.ticketPay.dni == "") ? this.state.orderPay.email : null }
+                                   required
+                                   disabled={(this.state.ticketPay.dni == "") ? true : false}/>
                         </FormGroup>
                     </div>
 

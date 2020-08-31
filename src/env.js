@@ -7,3 +7,4 @@ export const DEFAULT_URL = "https://ecopass.cl/";
 
 
 
+
